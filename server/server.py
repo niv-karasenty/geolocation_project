@@ -7,14 +7,18 @@ PORT = 5005
 app = Flask(__name__)
 logging.basicConfig(level=logging.INFO, format="[%(asctime)s] %(levelname)s: %(message)s")
 
-def process_value(value):
+def process_value(data):
     result = ""
-    if isinstance(value, (int, float)):
-        if value < 0:
-            result = "NEGATIVE signal detected"
+    lat = data["lat"]
+    lon = data["lon"]
+    aoa_deg = data["aoa_deg"]
+
+    #...
+    if isinstance(lat, (int, float)): #....
+        result = ""
 
     else:
-        result = f"Unknown type ({type(value).__name__}): {value}"
+        result = f"Unknown type ({type(lat).__name__}): {lon}"
 
     return result
 
@@ -33,22 +37,22 @@ def receive_data():
         return jsonify({"status": "error", "message": "Invalid or empty JSON body"}), 400
 
     # ── Extract parameter ──
-    if "value" not in payload:
-        logging.warning(f"Missing 'value' key. Got: {payload}")
-        return jsonify({"status": "error", "message": "JSON must contain a 'value' key"}), 422
+    results = {}
+
+    for key, value in payload.items():
+        result = process_value(value)
+        results[key] = result
+        print(f"{key}: {value!r} -> {result}")
 
     raw_value = payload["value"]
 
-    result = process_value(raw_value)
     print(f"Incoming value : {raw_value!r}")
-    print(f"Output         : {result}")
-
-    logging.info(f"Processed value={raw_value!r} → {result}")
+    print(f"Output         : {results}")
 
     return jsonify({
         "status": "ok",
         "received": raw_value,
-        "result": result
+        "results": results
     }), 200
 
 @app.route("/health", methods=["GET"])

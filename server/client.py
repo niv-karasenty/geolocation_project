@@ -5,8 +5,14 @@ import urllib.error
 SERVER_URL = "http://10.147.25.23:5005/data"
 TIMEOUT = 3  # seconds
 
-def send_to_server(value):
-    payload = json.dumps({"value": value}).encode("utf-8")
+def send_to_server(lat, lon, deg):
+    data = {
+        "lat": lat,
+        "lon": lon,
+        "aoa_deg": deg,
+    }
+
+    payload = json.dumps(data).encode("utf-8")
 
     req = urllib.request.Request(
         SERVER_URL,
@@ -33,4 +39,4 @@ def send_to_server(value):
 
 if __name__ == "__main__":
     test_values = [0, 5, 42, 150, -3, "on", "off", "hello"]
-    send_to_server(test_values[1])
+    send_to_server(test_values[1], test_values[2], 1) # test

@@ -28,12 +28,10 @@ def get_angle(freq, delta_time, Ts):
     return alpha_min, alpha_max
 
 def intersect():
-    
+    return None
 
 def locate(alpha_min, alpha_max, beta_min, beta_max):
     # find intersection depending on 2 angles (vectors)
-
-
 
     return None
 
