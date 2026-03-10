@@ -1,0 +1,11 @@
+This is the AoA_mod-write-a-block package meant as a guide to building
+out-of-tree packages. To use the AoA_mod blocks, the Python namespaces
+is in 'AoA_mod', which is imported as:
+
+    import AoA_mod
+
+See the Doxygen documentation for details about the blocks available
+in this package. A quick listing of the details can be found in Python
+after importing by using:
+
+    help(AoA_mod)
