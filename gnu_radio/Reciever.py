@@ -69,16 +69,16 @@ class Reciever(gr.top_block, Qt.QWidget):
         ##################################################
         self.tone_freq = tone_freq = 100e3
         self.samp_rate = samp_rate = 1e6
-        self.moving_average = moving_average = 5e3
-        self.d = d = 0.046
+        self.moving_average = moving_average = 512
+        self.d = d = 0.062
         self.center_freq = center_freq = 2.4e9
-        self.RX_gain = RX_gain = 0
+        self.RX_gain = RX_gain = 50
 
         ##################################################
         # Blocks
         ##################################################
 
-        self._RX_gain_range = qtgui.Range(0, 20, 1, 0, 200)
+        self._RX_gain_range = qtgui.Range(0, 50, 1, 50, 200)
         self._RX_gain_win = qtgui.RangeWidget(self._RX_gain_range, self.set_RX_gain, "'RX_gain'", "counter_slider", float, QtCore.Qt.Horizontal)
         self.top_layout.addWidget(self._RX_gain_win)
         self.uhd_usrp_source_0 = uhd.usrp_source(
@@ -93,7 +93,7 @@ class Reciever(gr.top_block, Qt.QWidget):
         # No synchronization enforced.
 
         self.uhd_usrp_source_0.set_center_freq(center_freq, 0)
-        self.uhd_usrp_source_0.set_antenna("TX/RX", 0)
+        self.uhd_usrp_source_0.set_antenna("RX2", 0)
         self.uhd_usrp_source_0.set_gain(RX_gain, 0)
 
         self.uhd_usrp_source_0.set_center_freq(center_freq, 1)
@@ -103,7 +103,7 @@ class Reciever(gr.top_block, Qt.QWidget):
             1024, #fftsize
             window.WIN_BLACKMAN_hARRIS, #wintype
             0, #fc
-            samp_rate, #bw
+            (samp_rate/10), #bw
             "input 2", #name
             True, #plotfreq
             True, #plotwaterfall
@@ -121,7 +121,7 @@ class Reciever(gr.top_block, Qt.QWidget):
             1024, #fftsize
             window.WIN_BLACKMAN_hARRIS, #wintype
             0, #fc
-            samp_rate, #bw
+            (samp_rate/10), #bw
             "input 1", #name
             True, #plotfreq
             True, #plotwaterfall
@@ -171,9 +171,10 @@ class Reciever(gr.top_block, Qt.QWidget):
         self.freq_xlating_fir_filter_xxx_0_0 = filter.freq_xlating_fir_filter_ccc(10, firdes.low_pass(1.0, samp_rate, 10e3, 1e3), tone_freq, samp_rate)
         self.freq_xlating_fir_filter_xxx_0 = filter.freq_xlating_fir_filter_ccc(10, firdes.low_pass(1.0, samp_rate, 10e3, 1e3), tone_freq, samp_rate)
         self.blocks_multiply_xx_0 = blocks.multiply_vcc(1)
+        self.blocks_moving_average_xx_0 = blocks.moving_average_cc(int(moving_average), 1/moving_average, 4000, 1)
         self.blocks_conjugate_cc_0 = blocks.conjugate_cc()
         self.blocks_complex_to_arg_0 = blocks.complex_to_arg(1)
-        self.AoA_mod_phase_to_angle_0 = AoA_mod.phase_to_angle(samp_rate, center_freq, tone_freq, d)
+        self.AoA_mod_phase_to_angle_0 = AoA_mod.phase_to_angle(samp_rate/10, center_freq, tone_freq, d)
 
 
         ##################################################
@@ -182,7 +183,8 @@ class Reciever(gr.top_block, Qt.QWidget):
         self.connect((self.AoA_mod_phase_to_angle_0, 0), (self.qtgui_number_sink_0, 0))
         self.connect((self.blocks_complex_to_arg_0, 0), (self.AoA_mod_phase_to_angle_0, 0))
         self.connect((self.blocks_conjugate_cc_0, 0), (self.blocks_multiply_xx_0, 1))
-        self.connect((self.blocks_multiply_xx_0, 0), (self.blocks_complex_to_arg_0, 0))
+        self.connect((self.blocks_moving_average_xx_0, 0), (self.blocks_complex_to_arg_0, 0))
+        self.connect((self.blocks_multiply_xx_0, 0), (self.blocks_moving_average_xx_0, 0))
         self.connect((self.freq_xlating_fir_filter_xxx_0, 0), (self.blocks_multiply_xx_0, 0))
         self.connect((self.freq_xlating_fir_filter_xxx_0, 0), (self.qtgui_sink_x_1, 0))
         self.connect((self.freq_xlating_fir_filter_xxx_0_0, 0), (self.blocks_conjugate_cc_0, 0))
@@ -214,8 +216,8 @@ class Reciever(gr.top_block, Qt.QWidget):
         self.samp_rate = samp_rate
         self.freq_xlating_fir_filter_xxx_0.set_taps(firdes.low_pass(1.0, self.samp_rate, 10e3, 1e3))
         self.freq_xlating_fir_filter_xxx_0_0.set_taps(firdes.low_pass(1.0, self.samp_rate, 10e3, 1e3))
-        self.qtgui_sink_x_1.set_frequency_range(0, self.samp_rate)
-        self.qtgui_sink_x_2.set_frequency_range(0, self.samp_rate)
+        self.qtgui_sink_x_1.set_frequency_range(0, (self.samp_rate/10))
+        self.qtgui_sink_x_2.set_frequency_range(0, (self.samp_rate/10))
         self.uhd_usrp_source_0.set_samp_rate(self.samp_rate)
 
     def get_moving_average(self):
@@ -223,7 +225,7 @@ class Reciever(gr.top_block, Qt.QWidget):
 
     def set_moving_average(self, moving_average):
         self.moving_average = moving_average
-        self.blocks_moving_average_xx_0.set_length_and_scale(int(self.moving_average), (1/self.moving_average))
+        self.blocks_moving_average_xx_0.set_length_and_scale(int(self.moving_average), 1/self.moving_average)
 
     def get_d(self):
         return self.d

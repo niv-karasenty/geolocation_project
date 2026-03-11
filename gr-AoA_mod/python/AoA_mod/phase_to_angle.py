@@ -29,27 +29,34 @@ class phase_to_angle(gr.sync_block):
         self.last_angle = 0.0
         self.counter = 0
         self.phase_cal = 0.0
+        self.curr_phi = 0.0
+        self.curr_angle = 0.2
 
     def work(self, input_items, output_items):
-        if self.phase_cal == 0.0:
-            self.phase_cal = np.average(input_items[0])
-            print(f"Phase calibration set to {self.phase_cal:.2f} radians")
+        # phase calibration assuming the object starts directly in front of the antenna
+        # if self.phase_cal == 0.0:
+        #     self.phase_cal = np.average(input_items[0])
+        #     print(f"Phase calibration set to {self.phase_cal:.2f} radians")
         phase_in0 = input_items[0]
         angle_out = output_items[0]
         
         # For now there is no phase cllibration
         phi = phase_in0 - self.phase_cal
 
-        x = np.average((self.lambda_ * phi) / (2 * np.pi * self.d))
+        x = (self.lambda_ * phi) / (2 * np.pi * self.d)
 
         # Adjust for overflow
-        # x = np.clip(x, -1, 1)
+        # x = (np.mod(x + 1, 2) - 1) * np.sign(x)
+        x = np.clip(x, -1, 1)
         
         # Find the angle of arrival
         angle_out[:] = np.degrees(np.arcsin(x))
         self.counter += 1
-
-        if self.counter%100 == 0:
-            print(x)
-            print(f"phase: {phi[0]:.2f} Angle: {angle_out[0]:.2f} degrees")
+        # self.curr_phi = np.average(phi)/1000
+        # self.curr_angle = np.average(angle_out)/1000
+        if self.counter%1000 == 0:
+            # print(f"phase: {self.curr_phi:.2f} Angle: {self.curr_angle:.2f} degrees")
+            # self.curr_angle = 0.0
+            # self.curr_phi = 0.0
+            print(f"phase: {np.average(phi):.2f} Angle: {np.average(angle_out):.2f} degrees")
         return len(output_items[0])

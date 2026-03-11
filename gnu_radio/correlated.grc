@@ -82,7 +82,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '512'
+    value: '1024'
   states:
     bus_sink: false
     bus_source: false
@@ -130,7 +130,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [912, 136.0]
+    coordinate: [1016, 128.0]
     rotation: 0
     state: enabled
 - name: analog_sig_source_x_0
@@ -155,7 +155,7 @@ blocks:
     bus_structure: null
     coordinate: [24, 316.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: blocks_complex_to_arg_0
   id: blocks_complex_to_arg
   parameters:
@@ -169,7 +169,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [800, 148.0]
+    coordinate: [904, 140.0]
     rotation: 0
     state: enabled
 - name: blocks_conjugate_cc_0
@@ -184,7 +184,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [432, 164.0]
+    coordinate: [536, 156.0]
     rotation: 0
     state: enabled
 - name: blocks_moving_average_xx_0
@@ -204,7 +204,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [672, 136.0]
+    coordinate: [776, 128.0]
     rotation: 0
     state: enabled
 - name: blocks_multiply_xx_0
@@ -222,7 +222,43 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [568, 132.0]
+    coordinate: [672, 124.0]
+    rotation: 0
+    state: enabled
+- name: blocks_multiply_xx_1
+  id: blocks_multiply_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '2'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [240, 76.0]
+    rotation: 0
+    state: enabled
+- name: blocks_multiply_xx_2
+  id: blocks_multiply_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '2'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [240, 180.0]
     rotation: 0
     state: enabled
 - name: freq_xlating_fir_filter_xxx_0
@@ -242,7 +278,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [248, 84.0]
+    coordinate: [352, 76.0]
     rotation: 0
     state: enabled
 - name: freq_xlating_fir_filter_xxx_0_0
@@ -262,7 +298,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [248, 188.0]
+    coordinate: [352, 180.0]
     rotation: 0
     state: enabled
 - name: qtgui_number_sink_0
@@ -325,7 +361,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1080, 136.0]
+    coordinate: [1184, 128.0]
     rotation: 0
     state: enabled
 - name: qtgui_sink_x_1
@@ -354,7 +390,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [512, 232.0]
+    coordinate: [616, 224.0]
     rotation: 0
     state: enabled
 - name: qtgui_sink_x_2
@@ -383,7 +419,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [512, 328.0]
+    coordinate: [616, 320.0]
     rotation: 0
     state: enabled
 - name: uhd_usrp_source_0
@@ -825,16 +861,20 @@ blocks:
 
 connections:
 - [AoA_mod_phase_to_angle_0, '0', qtgui_number_sink_0, '0']
+- [analog_sig_source_x_0, '0', blocks_multiply_xx_1, '1']
+- [analog_sig_source_x_0, '0', blocks_multiply_xx_2, '1']
 - [blocks_complex_to_arg_0, '0', AoA_mod_phase_to_angle_0, '0']
 - [blocks_conjugate_cc_0, '0', blocks_multiply_xx_0, '1']
 - [blocks_moving_average_xx_0, '0', blocks_complex_to_arg_0, '0']
 - [blocks_multiply_xx_0, '0', blocks_moving_average_xx_0, '0']
+- [blocks_multiply_xx_1, '0', freq_xlating_fir_filter_xxx_0, '0']
+- [blocks_multiply_xx_2, '0', freq_xlating_fir_filter_xxx_0_0, '0']
 - [freq_xlating_fir_filter_xxx_0, '0', blocks_multiply_xx_0, '0']
 - [freq_xlating_fir_filter_xxx_0, '0', qtgui_sink_x_1, '0']
 - [freq_xlating_fir_filter_xxx_0_0, '0', blocks_conjugate_cc_0, '0']
 - [freq_xlating_fir_filter_xxx_0_0, '0', qtgui_sink_x_2, '0']
-- [uhd_usrp_source_0, '0', freq_xlating_fir_filter_xxx_0, '0']
-- [uhd_usrp_source_0, '1', freq_xlating_fir_filter_xxx_0_0, '0']
+- [uhd_usrp_source_0, '0', blocks_multiply_xx_1, '0']
+- [uhd_usrp_source_0, '1', blocks_multiply_xx_2, '0']
 
 metadata:
   file_format: 1
