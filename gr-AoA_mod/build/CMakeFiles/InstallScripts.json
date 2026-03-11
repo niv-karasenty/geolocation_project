@@ -1,0 +1,15 @@
+{
+	"InstallScripts" : 
+	[
+		"/Users/nivkarasenty/Desktop/niv/Delta/geolocation_project/geolocation_project/gr-AoA_mod/build/cmake_install.cmake",
+		"/Users/nivkarasenty/Desktop/niv/Delta/geolocation_project/geolocation_project/gr-AoA_mod/build/include/gnuradio/AoA_mod/cmake_install.cmake",
+		"/Users/nivkarasenty/Desktop/niv/Delta/geolocation_project/geolocation_project/gr-AoA_mod/build/lib/cmake_install.cmake",
+		"/Users/nivkarasenty/Desktop/niv/Delta/geolocation_project/geolocation_project/gr-AoA_mod/build/apps/cmake_install.cmake",
+		"/Users/nivkarasenty/Desktop/niv/Delta/geolocation_project/geolocation_project/gr-AoA_mod/build/examples/cmake_install.cmake",
+		"/Users/nivkarasenty/Desktop/niv/Delta/geolocation_project/geolocation_project/gr-AoA_mod/build/docs/cmake_install.cmake",
+		"/Users/nivkarasenty/Desktop/niv/Delta/geolocation_project/geolocation_project/gr-AoA_mod/build/python/AoA_mod/cmake_install.cmake",
+		"/Users/nivkarasenty/Desktop/niv/Delta/geolocation_project/geolocation_project/gr-AoA_mod/build/python/AoA_mod/bindings/cmake_install.cmake",
+		"/Users/nivkarasenty/Desktop/niv/Delta/geolocation_project/geolocation_project/gr-AoA_mod/build/grc/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

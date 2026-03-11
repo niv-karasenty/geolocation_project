@@ -1,0 +1,8 @@
+/opt/homebrew/Cellar/gnuradio/3.10.12.0_10/include/gnuradio/AoA_mod/api.h
+/opt/homebrew/Cellar/gnuradio/3.10.12.0_10/libexec/venv/lib/python3.14/site-packages/gnuradio/AoA_mod/__init__.py
+/opt/homebrew/Cellar/gnuradio/3.10.12.0_10/libexec/venv/lib/python3.14/site-packages/gnuradio/AoA_mod/phase_to_angle.py
+/opt/homebrew/Cellar/gnuradio/3.10.12.0_10/libexec/venv/lib/python3.14/site-packages/gnuradio/AoA_mod/send_to_server.py
+/opt/homebrew/Cellar/gnuradio/3.10.12.0_10/share/gnuradio/grc/blocks/AoA_mod_phase_to_angle.block.yml
+/opt/homebrew/Cellar/gnuradio/3.10.12.0_10/share/gnuradio/grc/blocks/AoA_mod_send_to_server.block.yml
+/opt/homebrew/Cellar/gnuradio/3.10.12.0_10/lib/cmake/gnuradio-AoA_mod/gnuradio-AoA_modConfig.cmake
+/opt/homebrew/Cellar/gnuradio/3.10.12.0_10/share/gnuradio/manifests/AoA_mod/MANIFEST-1.0.00.yml

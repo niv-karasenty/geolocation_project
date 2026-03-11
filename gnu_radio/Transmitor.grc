@@ -97,7 +97,7 @@ blocks:
     alias: ''
     amp: '1'
     comment: ''
-    freq: '1000'
+    freq: tone_freq
     maxoutbuf: '0'
     minoutbuf: '0'
     offset: '0'
@@ -110,7 +110,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [80, 116.0]
+    coordinate: [216, 156.0]
     rotation: 0
     state: enabled
 - name: blocks_multiply_const_vxx_0
@@ -128,7 +128,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [224, 140.0]
+    coordinate: [368, 180.0]
     rotation: 0
     state: enabled
 - name: uhd_usrp_sink_0
@@ -244,7 +244,7 @@ blocks:
     comment: ''
     dev_addr: '""'
     dev_args: ''
-    gain0: '0'
+    gain0: '30'
     gain1: '0'
     gain10: '0'
     gain11: '0'
@@ -405,7 +405,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [384, 104.0]
+    coordinate: [568, 140.0]
     rotation: 0
     state: enabled
 
