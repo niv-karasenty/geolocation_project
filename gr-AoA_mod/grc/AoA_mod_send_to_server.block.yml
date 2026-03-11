@@ -13,13 +13,21 @@ templates:
 #     * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
 #     * default
 parameters:
-- id: parametername_replace_me
-  label: FIX ME
+- id: host
+  label: Host
   dtype: string
-  default: You need to fill in your grc/AoA_mod_send_to_server.block.yaml
-#- id: ...
-#  label: ...
-#  dtype: ...
+
+- id: port
+  label: Port
+  dtype: string
+
+- id: station_id
+  label: Station ID
+  dtype: string
+
+- id: send_every
+  label: Send Every N Samples
+  dtype: int
 
 #  Make one 'inputs' list entry per input and one 'outputs' list entry per output.
 #  Keys include:
@@ -29,18 +37,9 @@ parameters:
 #      * vlen (optional - data stream vector length. Default is 1)
 #      * optional (optional - set to 1 for optional inputs. Default is 0)
 inputs:
-#- label: ...
-#  domain: ...
-#  dtype: ...
-#  vlen: ...
-#  optional: ...
-
-outputs:
-#- label: ...
-#  domain: ...
-#  dtype: ...
-#  vlen: ...
-#  optional: ...
+- label: in
+  domain: stream
+  dtype: float
 
 #  'file_format' specifies the version of the GRC yml format used in the file
 #  and should usually not be changed.

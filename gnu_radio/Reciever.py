@@ -68,8 +68,11 @@ class Reciever(gr.top_block, Qt.QWidget):
         # Variables
         ##################################################
         self.tone_freq = tone_freq = 100e3
+        self.send_every = send_every = 10000
         self.samp_rate = samp_rate = 1e6
+        self.port = port = "5005"
         self.moving_average = moving_average = 512
+        self.host_address = host_address = "172.20.10.7"
         self.d = d = 0.062
         self.center_freq = center_freq = 2.4e9
         self.RX_gain = RX_gain = 50
@@ -135,52 +138,20 @@ class Reciever(gr.top_block, Qt.QWidget):
         self.qtgui_sink_x_1.enable_rf_freq(False)
 
         self.top_layout.addWidget(self._qtgui_sink_x_1_win)
-        self.qtgui_number_sink_0 = qtgui.number_sink(
-            gr.sizeof_float,
-            0,
-            qtgui.NUM_GRAPH_HORIZ,
-            1,
-            None # parent
-        )
-        self.qtgui_number_sink_0.set_update_time(0.10)
-        self.qtgui_number_sink_0.set_title("")
-
-        labels = ['', '', '', '', '',
-            '', '', '', '', '']
-        units = ['', '', '', '', '',
-            '', '', '', '', '']
-        colors = [("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"),
-            ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black")]
-        factor = [1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1]
-
-        for i in range(1):
-            self.qtgui_number_sink_0.set_min(i, -90)
-            self.qtgui_number_sink_0.set_max(i, 90)
-            self.qtgui_number_sink_0.set_color(i, colors[i][0], colors[i][1])
-            if len(labels[i]) == 0:
-                self.qtgui_number_sink_0.set_label(i, "Data {0}".format(i))
-            else:
-                self.qtgui_number_sink_0.set_label(i, labels[i])
-            self.qtgui_number_sink_0.set_unit(i, units[i])
-            self.qtgui_number_sink_0.set_factor(i, factor[i])
-
-        self.qtgui_number_sink_0.enable_autoscale(False)
-        self._qtgui_number_sink_0_win = sip.wrapinstance(self.qtgui_number_sink_0.qwidget(), Qt.QWidget)
-        self.top_layout.addWidget(self._qtgui_number_sink_0_win)
         self.freq_xlating_fir_filter_xxx_0_0 = filter.freq_xlating_fir_filter_ccc(10, firdes.low_pass(1.0, samp_rate, 10e3, 1e3), tone_freq, samp_rate)
         self.freq_xlating_fir_filter_xxx_0 = filter.freq_xlating_fir_filter_ccc(10, firdes.low_pass(1.0, samp_rate, 10e3, 1e3), tone_freq, samp_rate)
         self.blocks_multiply_xx_0 = blocks.multiply_vcc(1)
         self.blocks_moving_average_xx_0 = blocks.moving_average_cc(int(moving_average), 1/moving_average, 4000, 1)
         self.blocks_conjugate_cc_0 = blocks.conjugate_cc()
         self.blocks_complex_to_arg_0 = blocks.complex_to_arg(1)
+        self.AoA_mod_send_to_server_0 = AoA_mod.send_to_server(host_address, port, 'RX1', send_every)
         self.AoA_mod_phase_to_angle_0 = AoA_mod.phase_to_angle(samp_rate/10, center_freq, tone_freq, d)
 
 
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.AoA_mod_phase_to_angle_0, 0), (self.qtgui_number_sink_0, 0))
+        self.connect((self.AoA_mod_phase_to_angle_0, 0), (self.AoA_mod_send_to_server_0, 0))
         self.connect((self.blocks_complex_to_arg_0, 0), (self.AoA_mod_phase_to_angle_0, 0))
         self.connect((self.blocks_conjugate_cc_0, 0), (self.blocks_multiply_xx_0, 1))
         self.connect((self.blocks_moving_average_xx_0, 0), (self.blocks_complex_to_arg_0, 0))
@@ -209,6 +180,12 @@ class Reciever(gr.top_block, Qt.QWidget):
         self.freq_xlating_fir_filter_xxx_0.set_center_freq(self.tone_freq)
         self.freq_xlating_fir_filter_xxx_0_0.set_center_freq(self.tone_freq)
 
+    def get_send_every(self):
+        return self.send_every
+
+    def set_send_every(self, send_every):
+        self.send_every = send_every
+
     def get_samp_rate(self):
         return self.samp_rate
 
@@ -220,12 +197,24 @@ class Reciever(gr.top_block, Qt.QWidget):
         self.qtgui_sink_x_2.set_frequency_range(0, (self.samp_rate/10))
         self.uhd_usrp_source_0.set_samp_rate(self.samp_rate)
 
+    def get_port(self):
+        return self.port
+
+    def set_port(self, port):
+        self.port = port
+
     def get_moving_average(self):
         return self.moving_average
 
     def set_moving_average(self, moving_average):
         self.moving_average = moving_average
         self.blocks_moving_average_xx_0.set_length_and_scale(int(self.moving_average), 1/self.moving_average)
+
+    def get_host_address(self):
+        return self.host_address
+
+    def set_host_address(self, host_address):
+        self.host_address = host_address
 
     def get_d(self):
         return self.d

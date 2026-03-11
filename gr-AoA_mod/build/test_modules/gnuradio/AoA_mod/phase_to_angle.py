@@ -51,12 +51,12 @@ class phase_to_angle(gr.sync_block):
         
         # Find the angle of arrival
         angle_out[:] = np.degrees(np.arcsin(x))
-        self.counter += 1
-        # self.curr_phi = np.average(phi)/1000
-        # self.curr_angle = np.average(angle_out)/1000
-        if self.counter%1000 == 0:
-            # print(f"phase: {self.curr_phi:.2f} Angle: {self.curr_angle:.2f} degrees")
-            # self.curr_angle = 0.0
-            # self.curr_phi = 0.0
-            print(f"phase: {np.average(phi):.2f} Angle: {np.average(angle_out):.2f} degrees")
+        # self.counter += 1
+        # # self.curr_phi = np.average(phi)/1000
+        # # self.curr_angle = np.average(angle_out)/1000
+        # if self.counter%1000 == 0:
+        #     # print(f"phase: {self.curr_phi:.2f} Angle: {self.curr_angle:.2f} degrees")
+        #     # self.curr_angle = 0.0
+        #     # self.curr_phi = 0.0
+        #     print(f"phase: {np.average(phi):.2f} Angle: {np.average(angle_out):.2f} degrees")
         return len(output_items[0])
