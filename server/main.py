@@ -1,9 +1,13 @@
 import numpy as np
 from numpy.ma.core import arccos
+from pyproj import Transformer
 
+print(x, y)
 c = 3e8
+
 rx0 = [0, 1]
 rx1 = [1, 0]
+EARTH_RADIUS = 6378137.0
 
 def main():
     freq = 1e6
@@ -15,6 +19,10 @@ def main():
     beta_min, beta_max = get_angle(freq, delta1, Ts)
 
     locate(alpha_min, alpha_max, beta_min, beta_max)
+
+def gps_to_xy(lat, lon):
+    transformer = Transformer.from_crs("EPSG:4326", "EPSG:32636")  # UTM zone example
+x, y = transformer.transform(lat, lon)
 
 def get_angle(freq, delta_time, Ts):
     wavelength = c/freq
