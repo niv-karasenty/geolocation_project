@@ -30,7 +30,7 @@ class phase_to_angle(gr.sync_block):
         self.counter = 0
         self.phase_cal = 0.0
         self.curr_phi = 0.0
-        self.curr_angle = 0.2
+        self.curr_angle = 0.0
 
     def work(self, input_items, output_items):
         # phase calibration assuming the object starts directly in front of the antenna
@@ -51,12 +51,16 @@ class phase_to_angle(gr.sync_block):
         
         # Find the angle of arrival
         angle_out[:] = np.degrees(np.arcsin(x))
-        # self.counter += 1
-        # # self.curr_phi = np.average(phi)/1000
-        # # self.curr_angle = np.average(angle_out)/1000
-        # if self.counter%1000 == 0:
-        #     # print(f"phase: {self.curr_phi:.2f} Angle: {self.curr_angle:.2f} degrees")
-        #     # self.curr_angle = 0.0
-        #     # self.curr_phi = 0.0
-        #     print(f"phase: {np.average(phi):.2f} Angle: {np.average(angle_out):.2f} degrees")
+        self.counter += 1
+        # self.curr_phi = np.average(phi)/1000
+        # self.curr_angle = np.average(angle_out)/1000
+        self.curr_phi += np.average(phi)/1000
+        self.curr_angle += np.average(angle_out)/1000
+        if self.counter%1000 == 0:
+            # print(f"phase: {self.curr_phi:.2f} Angle: {self.curr_angle:.2f} degrees")
+            # self.curr_angle = 0.0
+            # self.curr_phi = 0.0
+            print(f"phase: {np.average(self.curr_phi):.2f} Angle: {np.average(self.curr_angle):.2f} degrees")
+            self.curr_angle = 0.0
+            self.curr_phi = 0.0
         return len(output_items[0])

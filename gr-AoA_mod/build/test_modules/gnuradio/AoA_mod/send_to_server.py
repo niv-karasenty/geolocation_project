@@ -30,6 +30,7 @@ class send_to_server(gr.sync_block):
         self.station_id = station_id
         self.send_every = send_every
         self.counter = 0
+        self.aoa_angle = 0.0
 
     def send_aoa(self, rx_id, aoa_deg):
         data = {
@@ -66,24 +67,12 @@ class send_to_server(gr.sync_block):
 
     def work(self, input_items, output_items):
         in0 = input_items[0]
+        self.aoa_angle += np.average(in0)/self.send_every
         self.counter += 1
-        if self.counter < self.send_every:
+        if self.counter >= self.send_every:
             self.counter = 0
-            self.send_aoa(self.station_id, (np.average(in0[0])))
-            self.send_aoa(self.station_id, (np.average(in0[0])))
+            self.send_aoa(self.station_id, np.average(in0[0]))
+            self.aoa_angle = 0.0
 
-        readings = [
-            (45.0, 120.0),
-            (50.0, 115.0),
-            (48.0, 118.0),
-        ]
-
-        # print(f"[client] Sending {len(readings)} readings to {f"http://{self.host}:{self.port}/data"}")
-        # print( "[client] Make sure server.py is running first.\n")
-        # if self.counter < self.send_every:
-        #     for i, (aoa1, aoa2) in enumerate(readings):
-        #             print(f"-- Reading {i + 1} --")
-        #             self.send_aoa("RX1", aoa1)
-        #             self.send_aoa("RX2", aoa2)
-        #             time.sleep(1.5)   # short interval so dashboard animates nicely   
+         
         return len(input_items[0])
